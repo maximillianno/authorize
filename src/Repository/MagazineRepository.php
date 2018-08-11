@@ -19,6 +19,8 @@ class MagazineRepository extends ServiceEntityRepository
         parent::__construct($registry, Magazine::class);
     }
 
+
+
 //    /**
 //     * @return Magazine[] Returns an array of Magazine objects
 //     */
