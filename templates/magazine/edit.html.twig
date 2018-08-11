@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Magazine{% endblock %}
+
+{% block body %}
+    <h1>Edit Magazine</h1>
+
+    {{ include('magazine/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('magazine_index') }}">back to list</a>
+
+    {{ include('magazine/_delete_form.html.twig') }}
+{% endblock %}
