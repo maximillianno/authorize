@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Magazine;
 use App\Form\MagazineType;
 use App\Repository\MagazineRepository;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +28,24 @@ class MagazineController extends Controller
      */
     public function index(MagazineRepository $magazineRepository): Response
     {
-        return $this->render('magazine/index.html.twig', ['magazines' => $magazineRepository->findAll()]);
+        $page = $this->get('request_stack')->getCurrentRequest()->query->get('page') ? $this->get('request_stack')->getCurrentRequest()->query->get('page') : 1;
+
+
+        //Адаптер для работы с БД через доктрин
+        $queryBuilder = $magazineRepository->createQueryBuilder('c')->orderBy('c.date', 'ASC');
+        $adapter = new DoctrineORMAdapter($queryBuilder);
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta->setMaxPerPage(3);
+        $pagerfanta->setCurrentPage($page);
+//        $magazines = $magazineRepository->findAllSort();
+        $magazines = $pagerfanta->getCurrentPageResults();
+
+
+
+        return $this->render('magazine/index.html.twig', [
+            'magazines' => $magazines,
+            'my_pager' => $pagerfanta,
+            ]);
     }
 
     /**

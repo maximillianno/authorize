@@ -36,6 +36,8 @@
         {% endfor %}
         </tbody>
     </table>
+    {{ pagerfanta(my_pager, 'twitter_bootstrap4') }}
+
 
     <a href="{{ path('magazine_new') }}">Create new</a>
 {% endblock %}

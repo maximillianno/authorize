@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Author;
 use App\Form\AuthorType;
 use App\Repository\AuthorRepository;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,8 +29,17 @@ class AuthorController extends Controller
      */
     public function index(AuthorRepository $authorRepository): Response
     {
+        $page = $this->get('request_stack')->getCurrentRequest()->query->get('page') ? $this->get('request_stack')->getCurrentRequest()->query->get('page') : 1;
 
-        return $this->render('author/index.html.twig', ['authors' => $authorRepository->findAll()]);
+        $queryBuilder = $authorRepository->createQueryBuilder('c')->orderBy('c.firstName', 'ASC');
+        $adapter = new DoctrineORMAdapter($queryBuilder);
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta->setMaxPerPage(3);
+        $pagerfanta->setCurrentPage($page);
+
+
+
+        return $this->render('author/index.html.twig', ['authors' => $pagerfanta->getCurrentPageResults(), 'my_pager' => $pagerfanta]);
     }
 
 

@@ -28,8 +28,8 @@ class MagazineFixtures extends Fixture implements DependentFixtureInterface
 
                 $magazine->addAuthor($author);
                 $manager->persist($magazine);
+                $manager->flush();
             }
-            $manager->flush();
 
         }
 

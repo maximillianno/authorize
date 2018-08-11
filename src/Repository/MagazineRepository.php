@@ -20,6 +20,14 @@ class MagazineRepository extends ServiceEntityRepository
     }
 
 
+    public function findAllSort()
+    {
+        return $this->createQueryBuilder('a')
+            ->orderBy('a.date', 'DESC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 
 //    /**
 //     * @return Magazine[] Returns an array of Magazine objects
